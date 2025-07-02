@@ -21,3 +21,14 @@ app.listen(3000, () => {
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+
+app.use((error, req, res, next) => {
+    
+    const statusCode = error.statusCode || 500;
+    const message = error.message || 'Internal Server Error';
+    return res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message
+    });
+});
