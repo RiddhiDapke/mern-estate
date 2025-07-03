@@ -18,7 +18,7 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
 
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json()); // Middleware to parse JSON bodies, without this, req.body will be undefined
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 
