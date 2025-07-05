@@ -43,3 +43,37 @@ export const signin = async (req, res, next) => {
         next(errorHander(550, 'Error signing in'));
     }
 }
+
+export const google = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        if (user) {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            const { password, ...rest } = user._doc;
+            res.cookie('access_token', token, {httpOnly:true}) // 30 days expiration
+            .status(200)
+            .json(rest);
+        }
+        else {
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8); //36 means numbers from 0 tp 9 and letters from a to z and + again to make it 16 characters long
+            const hasheedPassword = bcrypt.hashSync(generatedPassword, 10);
+            const newUser = new User({
+                username: req.body.name.split(" ").join("").toLowerCase()+Math.random().toString(36).slice(-4), //eg riddhidapke8754
+                email: req.body.email,
+                password: hasheedPassword,
+                avatar: req.body.photo,
+            });
+            await newUser.save();
+            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+            const { password, ...rest } = newUser._doc;
+            res.cookie('access_token', token, {httpOnly:true}) // 30 days expiration
+            .status(200)
+            .json(rest);
+            
+
+
+        }
+    } catch (error) {
+        next(error)
+    }
+}
