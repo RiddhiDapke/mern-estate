@@ -5,7 +5,7 @@ import {getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { app } from '../firebase';
 import { getDownloadURL } from 'firebase/storage';
 import User from '../../../api/models/user.model';
-import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess} from '../redux/user/userSlice';
+import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess} from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -86,7 +86,7 @@ const handleSubmit = async (e) => {
 const handleDeleteUser = async () => {
     try {
         dispatch(deleteUserStart());
-        const res = await fetch(`api/user/delete/${currentUser._id}`, {
+        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,6 +106,25 @@ const handleDeleteUser = async () => {
         dispatch(deleteUserFailure(error.message));
     }
 }
+
+const handleSignOut = async () => {
+  try {
+    dispatch(signOutUserStart());
+    const res = await fetch('/api/auth/signout', { credentials: 'include' }); 
+    const data = await res.json();
+    if (data.success === false) {
+      dispatch(signOutUserFailure(data.message));
+      return;
+    }
+
+    dispatch(signOutUserSuccess(data));
+    setUpdateSuccess(false);
+    navigate('/sign-in'); // redirect to sign-in page after successful sign-out
+  } catch (error) {
+    dispatch(signOutUserFailure(error.message));
+  }
+}
+
 
   return (
     <div className='p-3 max-w-lg mx-auto '>
@@ -137,7 +156,7 @@ const handleDeleteUser = async () => {
         </form>
         <div className='flex justify-between mt-5'>
             <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>Delete account</span>
-            <span className='text-red-700 cursor-pointer'>Sign out</span>
+            <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign out</span>
         </div>
         <p className='text-red-700 mt-5'>{error ? error : ""}</p>
         <p className='text-green-700 mt-3'>{updateSuccess ? 'User is updated successfully' : ''}</p>
