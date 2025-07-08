@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js'; // Adjust the path as necessary
 import authRouter from './routes/auth.route.js'; // Adjust the path as necessary
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI)
@@ -17,7 +18,7 @@ const app = express();
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
-
+app.use(cookieParser()); // Middleware to parse cookies
 app.use(express.json()); // Middleware to parse JSON bodies, without this, req.body will be undefined
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
