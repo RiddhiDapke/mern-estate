@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js'; // Adjust the path as necessary
 import authRouter from './routes/auth.route.js'; // Adjust the path as necessary
 import cookieParser from 'cookie-parser';
+import listingRouter from './routes/listing.route.js'; // Adjust the path as necessary
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI)
@@ -22,6 +23,7 @@ app.use(cookieParser()); // Middleware to parse cookies
 app.use(express.json()); // Middleware to parse JSON bodies, without this, req.body will be undefined
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/listing", listingRouter); 
 
 app.use((error, req, res, next) => {
     

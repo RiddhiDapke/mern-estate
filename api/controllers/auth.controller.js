@@ -15,7 +15,7 @@ export const signup = async(req, res, next) => {
         // .catch(err => {
         //     next(errorHander(550, 'Error creating user'));
         // });
-        .catch(err => {
+        .catch(error => {
             next(error);
         });
 
