@@ -8,6 +8,7 @@ import User from '../../../api/models/user.model';
 import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess} from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -152,6 +153,11 @@ const handleSignOut = async () => {
             <input type="password" placeholder='password' id='password' onChange={handleChange}
             className='border p-3 rounded-lg'/>
             <button disabled={loading} className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...' : 'Update'}</button>
+            
+            <Link className='uppercase text-center bg-green-700
+             text-white rounded-lg p-3 hover:opacity-95 disabled:opacity-80' to='/create-listing'> 
+                create listing
+            </Link>
 
         </form>
         <div className='flex justify-between mt-5'>
