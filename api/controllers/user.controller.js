@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { errorHander } from '../utils/error.js';
 import User from '../models/user.model.js'; // Adjust the path as necessary
+import Listing from '../models/listing.model.js';
  export const test = (req, res) => {
     res.status(200).json({ message: 'User route is working' });
 }
@@ -35,5 +36,18 @@ export const deleteUser = async (req, res, next) => {
         
     } catch (error) {
         next(error);
+    }
+}
+
+export const getUserListings = async (req, res, next) => {
+    if(req.user.id ==req.params.id){
+        try {
+            const listings = await Listing.find({userRef: req.params.id});
+            res.status(200).json(listings);
+        } catch (error) {
+            next(error);
+        }
+    }else{
+        return next(errorHandler(401, 'You can only view your own listings'));
     }
 }
