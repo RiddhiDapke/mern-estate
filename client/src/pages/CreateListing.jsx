@@ -117,6 +117,10 @@ export default function CreateListing() {
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
+        if (!currentUser) {
+            setError('You must be signed in to create a listing');
+            return;
+        }
         try {
             if(formData.imageUrls.length<1) return setError('You must upload at least one image');
             if(formData.regularPrice< formData.discountPrice) return setError('Discount price must be less than regular price')
