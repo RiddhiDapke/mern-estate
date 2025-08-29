@@ -5,6 +5,7 @@ import userRouter from './routes/user.route.js'; // Adjust the path as necessary
 import authRouter from './routes/auth.route.js'; // Adjust the path as necessary
 import cookieParser from 'cookie-parser';
 import listingRouter from './routes/listing.route.js'; // Adjust the path as necessary
+import path from 'path';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI)
@@ -15,6 +16,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('Error connecting to MongoDB:', err)
 );
 
+const __dirname = path.resolve();
+
 const app = express();
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
@@ -24,6 +27,13 @@ app.use(express.json()); // Middleware to parse JSON bodies, without this, req.b
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter); 
+
+app.use(express.static(path.join(__dirname, 'client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+}
+);
 
 app.use((error, req, res, next) => {
     
