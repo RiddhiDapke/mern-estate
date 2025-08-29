@@ -2,13 +2,16 @@
   "name": "api",
   "version": "1.0.0",
   "main": "index.js",
-    "type": "module",
+  "type": "module",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "node api/index.js"    
+    "start": "node index.js",
+    "dev": "node api/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
